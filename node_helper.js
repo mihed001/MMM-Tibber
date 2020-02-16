@@ -41,7 +41,7 @@ module.exports = NodeHelper.create({
         prices.current = res.current.total;
         // prices.twoDays = res.today;
         prices.twoDays = res.today.concat(res.tomorrow);
-        this.log("Tibber prices: ", prices);
+        this.log("Tibber prices: ", JSON.stringify(prices));
         this.sendSocketNotification("TIBBER_PRICE_DATA", prices);
       })
       .catch(e => {

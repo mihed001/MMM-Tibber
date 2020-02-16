@@ -39,7 +39,9 @@ Module.register("MMM-Tibber", {
         columnColors: {
             'NORMAL': ['#000055', '#0000dd', '#000088'], // Blue
             'CHEAP': ['#003300', '#00bb00', '#006600'], // Green
-            'EXPENSIVE': ['#440000', '#cc0000', '#770000'] // Red
+            'VERY_CHEAP': ['#003300', '#00bb00', '#006600'], // Green
+            'EXPENSIVE': ['#440000', '#cc0000', '#770000'], // Red
+            'VERY_EXPENSIVE': ['#440000', '#cc0000', '#770000'] // Red
         }
     },
 
@@ -110,6 +112,7 @@ Module.register("MMM-Tibber", {
                 categories.push(twoDaysHours[i]);
                 if(prices.twoDays.length > i) {
                     let p = prices.twoDays[i]
+					console.log(self.name + ': TIBBER_DATA, p.level = ' + p.level + ', ci = ' + ci);
                     data.push(
                         {
                             y: p.total,
