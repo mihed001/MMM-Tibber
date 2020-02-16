@@ -42,6 +42,8 @@ config: {
     tibberToken: '<find your token from tibber.com>',
     logging: false,
     decimalSeparator: ",",
+    showConsumptionInfo: true,
+	showPriceInfo: true,
     priceFontSize: 16,
     showMinPrice: true,
     showMaxPrice: true,
