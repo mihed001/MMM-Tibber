@@ -22,11 +22,38 @@ module.exports = NodeHelper.create({
       this.loaded = true;
       let self = this;
 
-      this.readTibberPrices(config);
+      if (config.showConsumptionInfo) this.readTibberConsumption(config);
+      if (config.showPriceInfo) this.readTibberPrices(config);
       setInterval(function() {
-        self.readTibberPrices(config);
+		if (config.showConsumptionInfo) self.readTibberConsumption(config);
+		if (config.showPriceInfo) self.readTibberPrices(config);
       }, 1000 * 60 * 60); // Every hour
     }
+  },
+
+  readTibberConsumption: function(config) {
+    this.log("readTibberConsumption");
+    let consumption = {
+      lastHour: null,
+      lastDay: null,
+      lastWeek: null,
+      lastMonth: null,
+      annual: null,
+    };
+    tibber
+      .getConsumption(config.tibberToken)
+      .then(res => {
+        consumption.lastHour = res.lastHourConsumption;
+        consumption.lastDay = res.lastDayConsumption;
+        consumption.lastWeek = res.lastWeekConsumption;
+        consumption.lastMonth = res.lastMonthConsumption;
+        consumption.annual = res.annualConsumption;
+        this.log("Tibber consumption: ", JSON.stringify(consumption));
+        this.sendSocketNotification("TIBBER_CONSUMPTION_DATA", consumption);
+      })
+      .catch(e => {
+        console.log("Error getting Tibber consumption: ", e);
+      });
   },
 
   readTibberPrices: function(config) {
@@ -45,7 +72,7 @@ module.exports = NodeHelper.create({
         this.sendSocketNotification("TIBBER_PRICE_DATA", prices);
       })
       .catch(e => {
-        console.log("Error getting tibber prices: ", e);
+        console.log("Error getting Tibber prices: ", e);
       });
   }
 });

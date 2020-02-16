@@ -19,6 +19,8 @@ Module.register("MMM-Tibber", {
         tibberToken: "log in to tibber to find your token",
         logging: false,
         decimalSeparator: ",",
+		showConsumptionInfo: true,
+		showPriceInfo: true,
         priceFontSize: 16,
         showMinPrice: true,
         showMaxPrice: true,
@@ -56,7 +58,19 @@ Module.register("MMM-Tibber", {
 
     socketNotificationReceived: function (notification, payload) {
         var self = this;
-        if (notification === 'TIBBER_PRICE_DATA') {
+        if (notification === 'TIBBER_CONSUMPTION_DATA') {
+            if (payload != null) {
+                //this.drawPrice(payload);
+                console.log(self.name + ': ' + notification + ' - notification received with payload.');
+                clearInterval(this.interval);
+                this.interval = setInterval(() => {
+                    //this.drawPrice(payload);
+                }, 30000);
+            } else {
+                console.log(self.name + ': ' + notification + ' - No payload');
+            }
+        }
+        else if (notification === 'TIBBER_PRICE_DATA') {
             if (payload != null) {
                 this.drawPrice(payload);
                 clearInterval(this.interval);
@@ -64,7 +78,7 @@ Module.register("MMM-Tibber", {
                     this.drawPrice(payload);
                 }, 30000);
             } else {
-                console.log(self.name + ': TIBBER_DATA - No payload');
+                console.log(self.name + ': ' + notification + ' - No payload');
             }
         }
     },
@@ -112,7 +126,6 @@ Module.register("MMM-Tibber", {
                 categories.push(twoDaysHours[i]);
                 if(prices.twoDays.length > i) {
                     let p = prices.twoDays[i]
-					console.log(self.name + ': TIBBER_DATA, p.level = ' + p.level + ', ci = ' + ci);
                     data.push(
                         {
                             y: p.total,
